@@ -3,8 +3,15 @@
 # Recipe:: install_package
 #
 
-include_recipe "yum-epel" if platform_family?("rhel") # ~FC007 uses `suggests`
+rpm_file = "monit-5.5-1.el6.rf.x86_64.rpm"
 
-package "monit" do
-  version node["monit"]["version"] if node["monit"]["version"]
+remote_file "#{Chef::Config[:file_cache_path]}/#{rpm_file}" do
+  source "http://pkgs.repoforge.org/monit/#{rpm_file}"
+  action :create_if_missing
+  notifies :run, "execute[install-monit-package]"
+end
+
+execute 'install-monit-package' do
+  command "rpm -i #{Chef::Config[:file_cache_path]}/#{rpm_file}"
+  action :nothing
 end
