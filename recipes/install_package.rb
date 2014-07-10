@@ -18,5 +18,5 @@ end
 execute 'install-monit-package' do
   command "rpm -i #{Chef::Config[:file_cache_path]}/#{rpm_file}"
   action :run
-  only_if perform_install
+  only_if {perform_install}
 end
